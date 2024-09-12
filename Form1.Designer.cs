@@ -30,6 +30,8 @@
         {
             this.cmbMechanic = new System.Windows.Forms.ComboBox();
             this.lblMechanics = new System.Windows.Forms.Label();
+            this.picBoxAvatar = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxAvatar)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMechanic
@@ -40,6 +42,7 @@
             this.cmbMechanic.Name = "cmbMechanic";
             this.cmbMechanic.Size = new System.Drawing.Size(269, 33);
             this.cmbMechanic.TabIndex = 0;
+            this.cmbMechanic.SelectedValueChanged += new System.EventHandler(this.cmbMechanic_SelectedValueChanged);
             // 
             // lblMechanics
             // 
@@ -51,15 +54,27 @@
             this.lblMechanics.TabIndex = 1;
             this.lblMechanics.Text = "Мастера:";
             // 
+            // picBoxAvatar
+            // 
+            this.picBoxAvatar.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.picBoxAvatar.Location = new System.Drawing.Point(398, 68);
+            this.picBoxAvatar.Name = "picBoxAvatar";
+            this.picBoxAvatar.Size = new System.Drawing.Size(120, 120);
+            this.picBoxAvatar.TabIndex = 2;
+            this.picBoxAvatar.TabStop = false;
+            this.picBoxAvatar.Click += new System.EventHandler(this.picBoxAvatar_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.picBoxAvatar);
             this.Controls.Add(this.lblMechanics);
             this.Controls.Add(this.cmbMechanic);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxAvatar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -69,6 +84,7 @@
 
         private System.Windows.Forms.ComboBox cmbMechanic;
         private System.Windows.Forms.Label lblMechanics;
+        private System.Windows.Forms.PictureBox picBoxAvatar;
     }
 }
 

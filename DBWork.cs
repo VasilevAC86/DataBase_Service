@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.IO;
+using System.Data.SqlClient;
 
 namespace Service
 {
@@ -22,7 +24,8 @@ namespace Service
                         "Mechanic " +
                         " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         " number INTEGER," +
-                        " name VARCHAR);";
+                        " name VARCHAR, " +
+                        "Avatar BLOB);"; // BLOB - бинарный тип данных для фото (.jpeg), Поле для фото
             string init_data_mechanic = "INSERT INTO Mechanic (number, name) " +
                         "VALUES " +
                         "(1, 'Иванов')," +
@@ -81,6 +84,47 @@ namespace Service
                         result.Add(reader.GetString(0)); // Добавляет по строчке                    
                 }
             }
+            return result;
+        }
+        // Метод для добавления аватарки мастеру
+        static public void AddAvatar(string _name, byte[] _image)
+        {
+            // Создаём соединение с SQL
+            using (SQLiteConnection conn = new SQLiteConnection(path))
+            {
+                SQLiteCommand command = new SQLiteCommand(conn);
+                command.CommandText = @"UPDATE Mechanic SET Avatar=@Avatar " +
+                    $"WHERE Name LIKE '{_name}%';";
+                command.Parameters.Add(new SQLiteParameter("@Avatar", _image));
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        static public MemoryStream GetAvatar(string _name) // По имени возвращает аватар из базы
+        {
+            MemoryStream result = null; // ссылка для хранения результата
+            byte[] _image = null; // ссылка для хранения массива байтов
+            // Создаём соединение с SQL
+            using (SQLiteConnection conn = new SQLiteConnection(path))
+            {
+                // Команда на основе созданного соединения
+                SQLiteCommand cmd = new SQLiteCommand(conn); 
+                string get_image = $"SELECT Avatar FROM Mechanic WHERE Name LIKE '{_name}%'";
+                cmd.CommandText = get_image;
+                conn.Open();
+                // Обратились к базе и получили System.Object с запакованными бинарными данными
+                SQLiteDataReader reader = cmd.ExecuteReader(); 
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0)) // Если не null, то
+                            _image = (byte[])reader.GetValue(0);                        
+                    }
+                }
+            }
+            if (_image != null)            
+                result = new MemoryStream(_image);
             return result;
         }
         static public void AddData(string _newCategoryInsert, string _dbname = "Servis.db")
